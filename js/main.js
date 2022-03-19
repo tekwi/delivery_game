@@ -95,6 +95,51 @@ function drawForm(){
   ctx.fillText("Get Back", canvas.width/2 + canvas.width * 0.28/2, canvas.height/2 - canvas.height * 0.3/2);
 }
 
+const btn = document.querySelector('input#send');
+
+function sendData( data ) {
+  console.log( 'Sending data' );
+
+  const XHR = new XMLHttpRequest();
+
+  let urlEncodedData = "",
+      urlEncodedDataPairs = [],
+      name;
+
+  // Turn the data object into an array of URL-encoded key/value pairs.
+  for( name in data ) {
+    urlEncodedDataPairs.push( encodeURIComponent( name ) + '=' + encodeURIComponent( data[name] ) );
+  }
+
+  // Combine the pairs into a single string and replace all %-encoded spaces to
+  // the '+' character; matches the behavior of browser form submissions.
+  urlEncodedData = urlEncodedDataPairs.join( '&' ).replace( /%20/g, '+' );
+
+  // Define what happens on successful data submission
+  XHR.addEventListener( 'load', function(event) {
+    alert( 'We got you covered!' );
+  } );
+
+  // Define what happens in case of error
+  XHR.addEventListener( 'error', function(event) {
+    alert( 'Done!' );
+  } );
+
+  // Set up our request
+  XHR.open( 'POST', 'https://freightprint.com/campaign/truckgame' );
+
+  // Add the required HTTP header for form data POST requests
+  XHR.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
+
+  // Finally, send our data.
+  XHR.send( urlEncodedData );
+}
+
+btn.addEventListener( 'click', function() {
+  sendData( {name:document.querySelector('input#name').value, email: document.querySelector('input#email').value} );
+} )
+
+
 var btnW = canvas.width * 0.3, btnH = canvas.height * 0.15, btnX = canvas.width/2 - btnW/2, btnY = canvas.height/2 - btnH/2;
 var sbtnW = canvas.width * 0.2, sbtnH = canvas.height * 0.1, sbtnX = canvas.width/2 - sbtnW/2, sbtnY = canvas.height/2 + sbtnH;
 function drawButton(text){
